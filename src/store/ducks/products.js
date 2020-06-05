@@ -1,39 +1,40 @@
-export const Types = {
-  GET_REQUEST: 'products/GET_REQUEST',
-  GET_SUCCESS: 'products/GET_SUCCESS',
-};
+import { createActions, createReducer } from 'reduxsauce';
+
+export const { Types, Creators } = createActions({
+  fetchProductsStart: [''],
+  fetchProductsSuccess: ['products'],
+  fetchProductsError: ['error'],
+});
 
 const INITIAL_STATE = {
-  data: [],
   loading: false,
+  error: null,
+  products: [],
 };
 
-export default function products(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case Types.GET_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-    case Types.GET_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        data: action.payload.data,
-      };
-    default:
-      return state;
-  }
-}
+const start = (state = INITIAL_STATE) => ({
+  ...state,
+  loading: true,
+  error: null,
+});
 
-export const Creators = {
-  getProductsRequest: () => ({
-    type: Types.GET_REQUEST,
-  }),
-  getProductsSuccess: (data) => ({
-    type: Types.GET_SUCCESS,
-    payload: {
-      data,
-    },
-  }),
+const success = (state = INITIAL_STATE, action) => ({
+  ...state,
+  loading: false,
+  error: null,
+  products: action.products,
+});
+
+const error = (state = INITIAL_STATE, action) => ({
+  ...state,
+  loading: false,
+  error: action.error,
+});
+
+export const HANDLERS = {
+  [Types.FETCH_PRODUCTS_START]: start,
+  [Types.FETCH_PRODUCTS_SUCCESS]: success,
+  [Types.FETCH_PRODUCTS_ERROR]: error,
 };
+
+export default createReducer(INITIAL_STATE, HANDLERS);

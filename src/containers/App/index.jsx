@@ -1,22 +1,26 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { PersistGate } from 'redux-persist/integration/react';
-import { Provider } from 'react-redux';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import Drawer from '../Drawer';
 
-import GlobalStyle from '../../styles/global';
+import './App.scss';
 
-import Routes from '../../routes';
-import { store, persistor } from '../../store';
+const App = ({ children, isDrawerVisible }) => (
+  <div className={`app ${isDrawerVisible ? 'app--is-drawer-visible' : ''}`}>
+    {children}
 
-export default function App() {
-  return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <Router>
-          <GlobalStyle />
-          <Routes />
-        </Router>
-      </PersistGate>
-    </Provider>
-  );
-}
+    <Drawer />
+  </div>
+);
+
+App.propTypes = {
+  children: PropTypes.node.isRequired,
+  isDrawerVisible: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = (store) => ({
+  isDrawerVisible: store.drawer.isDrawerVisible,
+});
+
+export default withRouter(connect(mapStateToProps)(App));

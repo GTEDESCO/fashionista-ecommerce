@@ -1,15 +1,23 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
 
-import ProductCatalog from '../containers/ProductCatalog';
-import Product from '../containers/Product';
+import history from './history';
+
+import App from '../containers/App';
+import Catalog from '../pages/Catalog';
+import Product from '../pages/Product';
 
 const Routes = () => {
   return (
-    <Switch>
-      <Route exact path="/" component={ProductCatalog} />
-      <Route exact path="/produto/:name" component={Product} />
-    </Switch>
+    <ConnectedRouter history={history}>
+      <App>
+        <Switch>
+          <Route exact path="/" component={Catalog} />
+          <Route exact path="/produto/:id" component={Product} />
+        </Switch>
+      </App>
+    </ConnectedRouter>
   );
 };
 
