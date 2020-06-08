@@ -1,22 +1,18 @@
-// import axios from 'axios';
-
-// const api = axios.create({
-//   baseURL: 'https://5e9935925eabe7001681c856.mockapi.io/api/v1/',
-// });
-
-import productsEndpoint from './products.json';
+import axios from 'axios';
 import { filterProductBySlug } from '../utils/productHandler';
 
-const getProducts = (mockedData) =>
-  new Promise((resolve) => resolve([...mockedData.products]));
+const apiAxios = axios.create({
+  baseURL: 'https://5e9935925eabe7001681c856.mockapi.io/api/v1/',
+});
+
+const getProducts = () =>
+  apiAxios.get('catalog').then((response) => [...response.data]);
 
 const getProductByPathname = (pathname) =>
-  new Promise((resolve) =>
-    resolve(filterProductBySlug(pathname, productsEndpoint, getProducts)),
-  );
+  apiAxios.get('catalog').then((response) => filterProductBySlug(pathname, [], getProducts));
 
 const api = {
-  getProducts: () => getProducts(productsEndpoint),
+  getProducts: () => getProducts(),
   getProductByPathname: (pathname) => getProductByPathname(pathname),
 };
 
